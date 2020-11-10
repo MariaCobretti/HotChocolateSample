@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HotChocolate.Data.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -16,10 +17,20 @@ namespace HotChocolateSample
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddGraphQLServer()
+            var builder = services.AddGraphQLServer()
                 .AddQueryType(f => f.Name("Query"))
                 .AddTypeExtension<QueryType>()
-                .AddFiltering();
+                
+                .AddFiltering()
+
+                .TryAddTypeInterceptor<CustomTypeInterceptor>();
+
+
+            var simple = typeof(ConcreteItemFilterInput<>).MakeGenericType(typeof(Haus));
+            var listType = typeof(ListFilterInput<>).MakeGenericType(simple);
+            builder.AddType(listType);
+
+            //builder.AddType(typeof(ListFilterInput<ConcreteItemFilterInput>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

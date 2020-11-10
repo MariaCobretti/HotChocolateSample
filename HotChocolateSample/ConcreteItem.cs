@@ -10,43 +10,52 @@ using HotChocolate.Types.Descriptors.Definitions;
 
 namespace HotChocolateSample
 {
-    public class ConcreteItem
+    public class Haus : IConcreteItem
     {
         public string ItemId { get; set; }
+
+
+
     }
 
-    public class ConcreteItemType : ObjectType<ConcreteItem>
+    public interface IConcreteItem
     {
-        protected override void Configure(IObjectTypeDescriptor<ConcreteItem> descriptor)
+        string ItemId { get; set; }
+    }
+
+    public class ConcreteItemType<TSchema> : ObjectType<TSchema>
+        where TSchema : IConcreteItem
+    {
+        protected override void Configure(IObjectTypeDescriptor<TSchema> descriptor)
         {
             descriptor.Name("ConcreteItem");
 
             descriptor.Field(f => f.ItemId)
-                .Resolve(ctx => ctx.Parent<ConcreteItem>().ItemId);
+                .Resolve(ctx => ctx.Parent<IConcreteItem>().ItemId);
 
             descriptor.Extend()
                 .OnBeforeCompletion((context, definition) =>
                 {
                     // single property
-                    var propertyTypeRef = context.TypeInspector.GetTypeRef(typeof(ConcreteItem));
+                    var propertyTypeRef = context.TypeInspector.GetTypeRef(typeof(TSchema));
                     var newField = new ObjectFieldDefinition()
                     {
                         Name = "concreteItemField",
                         Type = propertyTypeRef,
-                        Resolver = async ctx => await Task.FromResult(new ConcreteItem() { ItemId = "childId" })
+                        Resolver = async ctx => await Task.FromResult(new Haus() { ItemId = "childId" })
                     };
                     definition.Fields.Add(newField);
 
                     // list property
-                    var listPropertyTypeRef = context.TypeInspector.GetTypeRef(typeof(List<ConcreteItem>));
+                    var listPropertyTypeRef = context.TypeInspector.GetTypeRef(typeof(List<TSchema>));
                     var newListField = new ObjectFieldDefinition()
                     {
                         Name = "concreteItemListField",
                         Type = listPropertyTypeRef,
-                        Resolver = async ctx => await Task.FromResult(new List<ConcreteItem>()
+                        Resolver = async ctx => await Task.FromResult(new List<Haus>()
                         {
-                            new ConcreteItem(){ ItemId = "firstChildId"},
-                            new ConcreteItem(){ ItemId = "secondChildId"}
+                            new Haus(){ ItemId = "firstChildId"},
+                            new Haus(){ ItemId = "secondChildId"}
                         })
                     };
                     definition.Fields.Add(newListField);
@@ -54,9 +63,10 @@ namespace HotChocolateSample
         }
     }
 
-    public class ConcreteItemFilterInput : FilterInputType<ConcreteItem>
+    public class ConcreteItemFilterInput<TSchema> : FilterInputType<TSchema>
+        where TSchema : IConcreteItem
     {
-        protected override void Configure(IFilterInputTypeDescriptor<ConcreteItem> descriptor)
+        protected override void Configure(IFilterInputTypeDescriptor<TSchema> descriptor)
         {
             descriptor.Name("ConcreteItemFilterInput");
 
@@ -68,7 +78,7 @@ namespace HotChocolateSample
                 .OnBeforeCompletion((context, definition) =>
                 {
                     // single property
-                    var propertyTypeRef = context.TypeInspector.GetInputTypeRef(typeof(ConcreteItemFilterInput));
+                    var propertyTypeRef = context.TypeInspector.GetInputTypeRef(typeof(ConcreteItemFilterInput<TSchema>));
                     var newFilterField = new FilterFieldDefinition()
                     {
                         Name = "concreteItem",
@@ -79,7 +89,7 @@ namespace HotChocolateSample
 
                     // list property
                     // TODO: this is the issue
-                    var listPropertyTypeRef = context.TypeInspector.GetInputTypeRef(typeof(ListFilterInput<ConcreteItemFilterInput>));
+                    var listPropertyTypeRef = context.TypeInspector.GetInputTypeRef(typeof(ListFilterInput<ConcreteItemFilterInput<TSchema>>));
                     var newListFilterField = new FilterFieldDefinition()
                     {
                         Name = "concreteItems",
