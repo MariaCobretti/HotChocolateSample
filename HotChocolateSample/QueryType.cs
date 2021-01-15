@@ -11,34 +11,15 @@ namespace HotChocolateSample
         protected override void Configure(IObjectTypeDescriptor descriptor)
         {
             descriptor.Name("Query");
-            var haus = typeof(ConcreteItemType<>).MakeGenericType(typeof(MyTypeBase));
+            var haus = typeof(ConcreteItemType<>).MakeGenericType(typeof(Haus));
+            var haus2 = typeof(ConcreteItemType<>).MakeGenericType(typeof(Haus));
+
             descriptor.Field("haus")
                 .Type(haus)
-                .Resolve(x => new MyTypeBase() { ItemId = "parentId" } );
-
-
-
-            //var haus = typeof(ConcreteItemType<>).MakeGenericType(typeof(Haus));
-            //var wohnung = typeof(ConcreteItemType<>).MakeGenericType(typeof(Wohnung));
-
-            //var filterType = typeof(ConcreteItemFilterInput<>).MakeGenericType(typeof(Haus));
-            //var wohnungfilterType = typeof(ConcreteItemFilterInput<>).MakeGenericType(typeof(Wohnung));
-
-            //descriptor.Field("haus")
-            //    //.Type(haus)
-            //    .UsePaging(haus)
-            //    //.Type<ConcreteItemType>()
-            //    .Resolve(x => new List<Haus>() { new Haus() { ItemId = "parentId" } })
-            //    .UseFiltering(filterType);
-            //    //.UseFiltering<ConcreteItemFilterInput>();
-
-            //descriptor.Field("wohnung")
-            //    //.Type(wohnung)
-            //    .UsePaging(wohnung)
-            //    //.Type<ConcreteItemType>()
-            //    .Resolve(x => new List<Wohnung>() { new Wohnung() { ItemId = "parentId" } })
-            //    .UseFiltering(wohnungfilterType);
-            //    //.UseFiltering<ConcreteItemFilterInput>();
+                .Resolve(x => new Haus() { ItemId = "parentId" } );
+            descriptor.Field("haus2")
+                .Type(haus2)
+                .Resolve(x => new Haus2() { ItemId = "parentId" } );
         }
     }
 }

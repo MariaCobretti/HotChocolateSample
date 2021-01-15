@@ -12,7 +12,11 @@ using HotChocolate.Types.Descriptors.Definitions;
 
 namespace HotChocolateSample
 {
-    public class MyTypeBase : IConcreteItem
+    public class Haus : IConcreteItem
+    {
+        public string ItemId { get; set; }
+    }
+    public class Haus2 : IConcreteItem
     {
         public string ItemId { get; set; }
     }
@@ -27,22 +31,27 @@ namespace HotChocolateSample
     {
         protected override void Configure(IObjectTypeDescriptor<TSchema> descriptor)
         {
-            descriptor.BindFieldsExplicitly();
+            descriptor.BindFieldsImplicitly();
 
-            descriptor.Field(f => f.ItemId)
-                .Resolve(ctx => ctx.Parent<IConcreteItem>().ItemId);
+            //descriptor.Field(f => f.ItemId)
+            //    .Resolve(ctx => ctx.Parent<IConcreteItem>().ItemId);
             
             descriptor.Extend()
-                .OnBeforeCreate((context, definition) =>
+                .OnBeforeCompletion((context, definition) =>
                 {
                     var propertyTypeRef = context.TypeInspector.GetTypeRef(typeof(string));
-                    var newField = new ObjectFieldDefinition()
+
+                    foreach (var field in definition.Fields)
                     {
-                        Name = "stringField",
-                        Type = propertyTypeRef,
-                        Resolver = async ctx => await Task.FromResult("test")
-                    };
-                    definition.Fields.Add(newField);
+                    }
+
+                    //var newField = new ObjectFieldDefinition()
+                    //{
+                    //    Name = "stringField",
+                    //    Type = propertyTypeRef,
+                    //    Resolver = async ctx => await Task.FromResult("test")
+                    //};
+                    //definition.Fields.Add(newField);
                 });
         }
     }
