@@ -11,10 +11,10 @@ namespace HotChocolateSample
         protected override void Configure(IObjectTypeDescriptor descriptor)
         {
             descriptor.Name("Query");
-            var haus = typeof(ConcreteItemType<>).MakeGenericType(typeof(Haus));
+            var haus = typeof(ConcreteItemType<>).MakeGenericType(typeof(MyTypeBase));
             descriptor.Field("haus")
                 .Type(haus)
-                .Resolve(x => new Haus() { ItemId = "parentId" } );
+                .Resolve(x => new MyTypeBase() { ItemId = "parentId" } );
 
 
 
