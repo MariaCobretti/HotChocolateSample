@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HotChocolate.Data.Filters;
+using HotChocolate.Execution;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -20,15 +21,15 @@ namespace HotChocolateSample
             var builder = services.AddGraphQLServer()
                 .AddQueryType(f => f.Name("Query"))
                 .AddTypeExtension<QueryType>()
-                
-                .AddFiltering()
 
-                .TryAddTypeInterceptor<CustomTypeInterceptor>();
+                .AddFiltering();
+
+            //    .TryAddTypeInterceptor<CustomTypeInterceptor>();
 
 
-            var simple = typeof(ConcreteItemFilterInput<>).MakeGenericType(typeof(Haus));
-            var listType = typeof(ListFilterInput<>).MakeGenericType(simple);
-            builder.AddType(listType);
+            //var simple = typeof(ConcreteItemFilterInput<>).MakeGenericType(typeof(Haus));
+            //var listType = typeof(ListFilterInput<>).MakeGenericType(simple);
+            //builder.AddType(listType);
 
             //builder.AddType(typeof(ListFilterInput<ConcreteItemFilterInput>));
         }

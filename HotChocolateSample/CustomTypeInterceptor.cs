@@ -18,19 +18,123 @@ namespace HotChocolateSample
             = new Dictionary<string, IFilterConvention>();
 
         public override bool CanHandle(ITypeSystemObjectContext context) => true;
-
-        public override void OnBeforeRegisterDependencies(
-            ITypeDiscoveryContext discoveryContext,
-            DefinitionBase definition,
-            IDictionary<string, object> contextData)
+        public override void OnAfterInitialize(ITypeDiscoveryContext discoveryContext, DefinitionBase? definition, IDictionary<string, object?> contextData)
         {
-            Console.WriteLine(definition?.Name);
+            Console.WriteLine("OnAfterInitialize---" + definition?.Name.Value);
             if (definition is FilterInputTypeDefinition def)
             {
                 IFilterConvention? convention = GetConvention(
                     discoveryContext.DescriptorContext,
                     def.Scope);
 
+                var descriptor = FilterInputTypeDescriptor.From(
+                    discoveryContext.DescriptorContext,
+                    def,
+                    def.Scope);
+
+                var typeReference = TypeReference.Create(
+                    discoveryContext.Type,
+                    def.Scope);
+
+                convention.ApplyConfigurations(typeReference, descriptor);
+
+                foreach (InputFieldDefinition field in def.Fields)
+                {
+                    if (field is FilterFieldDefinition filterFieldDefinition)
+                    {
+                        if (discoveryContext.TryPredictTypeKind(
+                            filterFieldDefinition.Type,
+                            out TypeKind kind) &&
+                            kind != TypeKind.Scalar && kind != TypeKind.Enum)
+                        {
+                            field.Type = field.Type.With(scope: discoveryContext.Scope);
+                        }
+
+                        if (convention.TryGetHandler(
+                            discoveryContext,
+                            def,
+                            filterFieldDefinition,
+                            out IFilterFieldHandler? handler))
+                        {
+                            filterFieldDefinition.Handler = handler;
+                        }
+                        else
+                        {
+                            filterFieldDefinition.Handler = new QueryableDefaultFieldHandler();
+                            //throw ThrowHelper.FilterInterceptor_NoHandlerFoundForField(
+                            //    def,
+                            //    filterFieldDefinition);
+                        }
+                    }
+                }
+            }
+        }
+
+        public override void OnAfterRegisterDependencies(ITypeDiscoveryContext discoveryContext, DefinitionBase? definition,
+            IDictionary<string, object?> contextData)
+        {
+            Console.WriteLine("OnAfterRegisterDependencies---" + definition?.Name.Value);
+            if (definition is FilterInputTypeDefinition def)
+            {
+                IFilterConvention? convention = GetConvention(
+                    discoveryContext.DescriptorContext,
+                    def.Scope);
+
+                var descriptor = FilterInputTypeDescriptor.From(
+                    discoveryContext.DescriptorContext,
+                    def,
+                    def.Scope);
+
+                var typeReference = TypeReference.Create(
+                    discoveryContext.Type,
+                    def.Scope);
+
+                convention.ApplyConfigurations(typeReference, descriptor);
+
+                foreach (InputFieldDefinition field in def.Fields)
+                {
+                    if (field is FilterFieldDefinition filterFieldDefinition)
+                    {
+                        if (discoveryContext.TryPredictTypeKind(
+                            filterFieldDefinition.Type,
+                            out TypeKind kind) &&
+                            kind != TypeKind.Scalar && kind != TypeKind.Enum)
+                        {
+                            field.Type = field.Type.With(scope: discoveryContext.Scope);
+                        }
+
+                        if (convention.TryGetHandler(
+                            discoveryContext,
+                            def,
+                            filterFieldDefinition,
+                            out IFilterFieldHandler? handler))
+                        {
+                            filterFieldDefinition.Handler = handler;
+                        }
+                        else
+                        {
+                            filterFieldDefinition.Handler = new QueryableDefaultFieldHandler();
+                            //throw ThrowHelper.FilterInterceptor_NoHandlerFoundForField(
+                            //    def,
+                            //    filterFieldDefinition);
+                        }
+                    }
+                }
+            }
+        }
+
+        public override void OnBeforeRegisterDependencies(
+            ITypeDiscoveryContext discoveryContext,
+            DefinitionBase definition,
+            IDictionary<string, object> contextData)
+        {
+            Console.WriteLine("OnBeforeRegisterDependencies---" + definition?.Name.Value);
+            if (definition is FilterInputTypeDefinition def)
+            {
+                IFilterConvention? convention = GetConvention(
+                    discoveryContext.DescriptorContext,
+                    def.Scope);
+                
                 var descriptor = FilterInputTypeDescriptor.From(
                     discoveryContext.DescriptorContext,
                     def,
