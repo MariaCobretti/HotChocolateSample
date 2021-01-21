@@ -6,10 +6,10 @@ using StrawberryShake;
 namespace BerryClient
 {
     [System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "11.0.0")]
-    public partial interface IBasicInventory1
+    public partial interface IUserError
     {
-        System.Guid DynamicItemId { get; }
+        string Code { get; }
 
-        string StringField { get; }
+        string Message { get; }
     }
 }

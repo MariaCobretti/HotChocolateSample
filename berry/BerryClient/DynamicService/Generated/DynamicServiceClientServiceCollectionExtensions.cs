@@ -38,7 +38,9 @@ namespace BerryClient
                     sp.GetRequiredService<IClientOptions>().GetResultParsers(_clientName)));
 
             IOperationClientBuilder builder = serviceCollection.AddOperationClientOptions(_clientName)
-                .AddResultParser(serializers => new BasicInventoryResultParser(serializers))
+                .AddResultParser(serializers => new GetBasicInventoriesResultParser(serializers))
+                .AddResultParser(serializers => new GetBasicInventoryByIdResultParser(serializers))
+                .AddResultParser(serializers => new CreateBasicInventoryResultParser(serializers))
                 .AddOperationFormatter(serializers => new JsonOperationFormatter(serializers))
                 .AddHttpOperationPipeline(b => b.UseHttpDefaultPipeline());
 

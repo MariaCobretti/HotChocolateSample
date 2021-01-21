@@ -7,7 +7,7 @@ namespace BerryClient
 {
     [System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "11.0.0")]
     public partial class BasicInventory
-        : IBasicInventory1
+        : IBasicInventory
     {
         public BasicInventory(
             System.Guid dynamicItemId, 

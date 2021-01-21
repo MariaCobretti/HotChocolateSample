@@ -1,8 +1,32 @@
-query BasicInventory {
+query GetBasicInventories {
   basicInventory {
     nodes {
-      dynamicItemId
-      stringField
+       ...BasicInventory
     }
   }
+}
+
+query GetBasicInventoryById ($itemId: Uuid) {
+  basicInventory (where: { dynamicItemId: { eq: $itemId}}){
+    nodes{
+      ...BasicInventory
+    }
+  }
+}
+
+mutation CreateBasicInventory($stringInput: String) {
+  createBasicInventory(input: { stringField: $stringInput }) {
+    concreteItems {
+      ...BasicInventory
+    }
+    errors {
+      code
+      message
+    }
+  }
+}
+
+fragment BasicInventory on BasicInventory {
+  dynamicItemId
+  stringField
 }

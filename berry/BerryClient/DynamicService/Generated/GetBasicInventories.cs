@@ -6,10 +6,10 @@ using StrawberryShake;
 namespace BerryClient
 {
     [System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "11.0.0")]
-    public partial class BasicInventory1
-        : IBasicInventory
+    public partial class GetBasicInventories
+        : IGetBasicInventories
     {
-        public BasicInventory1(
+        public GetBasicInventories(
             global::BerryClient.IBasicInventoryConnection basicInventory)
         {
             BasicInventory = basicInventory;

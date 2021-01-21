@@ -6,16 +6,16 @@ using StrawberryShake;
 namespace BerryClient
 {
     [System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "11.0.0")]
-    public partial class BasicInventoryOperation
-        : IOperation<IBasicInventory>
+    public partial class GetBasicInventoriesOperation
+        : IOperation<IGetBasicInventories>
     {
-        public string Name => "BasicInventory";
+        public string Name => "GetBasicInventories";
 
         public IDocument Document => Queries.Default;
 
         public OperationKind Kind => OperationKind.Query;
 
-        public Type ResultType => typeof(IBasicInventory);
+        public Type ResultType => typeof(IGetBasicInventories);
 
         public IReadOnlyList<VariableValue> GetVariableValues()
         {

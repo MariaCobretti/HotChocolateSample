@@ -11,13 +11,13 @@ using StrawberryShake.Transport;
 namespace BerryClient
 {
     [System.CodeDom.Compiler.GeneratedCode("StrawberryShake", "11.0.0")]
-    public partial class BasicInventoryResultParser
-        : JsonResultParserBase<IBasicInventory>
+    public partial class CreateBasicInventoryResultParser
+        : JsonResultParserBase<ICreateBasicInventory>
     {
         private readonly IValueSerializer _uuidSerializer;
         private readonly IValueSerializer _stringSerializer;
 
-        public BasicInventoryResultParser(IValueSerializerCollection serializerResolver)
+        public CreateBasicInventoryResultParser(IValueSerializerCollection serializerResolver)
         {
             if (serializerResolver is null)
             {
@@ -27,36 +27,29 @@ namespace BerryClient
             _stringSerializer = serializerResolver.Get("String");
         }
 
-        protected override IBasicInventory ParserData(JsonElement data)
+        protected override ICreateBasicInventory ParserData(JsonElement data)
         {
-            return new BasicInventory1
+            return new CreateBasicInventory1
             (
-                ParseBasicInventoryBasicInventory(data, "basicInventory")
+                ParseCreateBasicInventoryCreateBasicInventory(data, "createBasicInventory")
             );
 
         }
 
-        private global::BerryClient.IBasicInventoryConnection ParseBasicInventoryBasicInventory(
+        private global::BerryClient.ICreateBasicInventoryPayload ParseCreateBasicInventoryCreateBasicInventory(
             JsonElement parent,
             string field)
         {
-            if (!parent.TryGetProperty(field, out JsonElement obj))
-            {
-                return null;
-            }
+            JsonElement obj = parent.GetProperty(field);
 
-            if (obj.ValueKind == JsonValueKind.Null)
-            {
-                return null;
-            }
-
-            return new BasicInventoryConnection
+            return new CreateBasicInventoryPayload
             (
-                ParseBasicInventoryBasicInventoryNodes(obj, "nodes")
+                ParseCreateBasicInventoryCreateBasicInventoryConcreteItems(obj, "concreteItems"),
+                ParseCreateBasicInventoryCreateBasicInventoryErrors(obj, "errors")
             );
         }
 
-        private global::System.Collections.Generic.IReadOnlyList<global::BerryClient.IBasicInventory1> ParseBasicInventoryBasicInventoryNodes(
+        private global::System.Collections.Generic.IReadOnlyList<global::BerryClient.IBasicInventory> ParseCreateBasicInventoryCreateBasicInventoryConcreteItems(
             JsonElement parent,
             string field)
         {
@@ -71,7 +64,7 @@ namespace BerryClient
             }
 
             int objLength = obj.GetArrayLength();
-            var list = new global::BerryClient.IBasicInventory1[objLength];
+            var list = new global::BerryClient.IBasicInventory[objLength];
             for (int objIndex = 0; objIndex < objLength; objIndex++)
             {
                 JsonElement element = obj[objIndex];
@@ -79,6 +72,36 @@ namespace BerryClient
                 (
                     DeserializeUuid(element, "dynamicItemId"),
                     DeserializeNullableString(element, "stringField")
+                );
+
+            }
+
+            return list;
+        }
+
+        private global::System.Collections.Generic.IReadOnlyList<global::BerryClient.IUserError> ParseCreateBasicInventoryCreateBasicInventoryErrors(
+            JsonElement parent,
+            string field)
+        {
+            if (!parent.TryGetProperty(field, out JsonElement obj))
+            {
+                return null;
+            }
+
+            if (obj.ValueKind == JsonValueKind.Null)
+            {
+                return null;
+            }
+
+            int objLength = obj.GetArrayLength();
+            var list = new global::BerryClient.IUserError[objLength];
+            for (int objIndex = 0; objIndex < objLength; objIndex++)
+            {
+                JsonElement element = obj[objIndex];
+                list[objIndex] = new UserError
+                (
+                    DeserializeString(element, "code"),
+                    DeserializeString(element, "message")
                 );
 
             }
@@ -104,6 +127,11 @@ namespace BerryClient
                 return null;
             }
 
+            return (string)_stringSerializer.Deserialize(value.GetString());
+        }
+        private string DeserializeString(JsonElement obj, string fieldName)
+        {
+            JsonElement value = obj.GetProperty(fieldName);
             return (string)_stringSerializer.Deserialize(value.GetString());
         }
     }

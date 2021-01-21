@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using StrawberryShake;
@@ -11,17 +12,20 @@ namespace BerryClient
         static async Task Main(string[] args)
         {
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddHttpClient("DynamicServiceClient",c => c.BaseAddress = new Uri("https://localhost:5001/graphql/"));
+            serviceCollection.AddHttpClient("DynamicServiceClient",c =>
+            {
+                c.BaseAddress = new Uri("https://localhost:5001/graphql/");
+            });
+
+
 
             serviceCollection.AddDynamicServiceClient();
 
             IServiceProvider services = serviceCollection.BuildServiceProvider();
             IDynamicServiceClient client = services.GetRequiredService<IDynamicServiceClient>();
 
-            Console.WriteLine("start");
-            IOperationResult<IBasicInventory> result = await client.BasicInventoryAsync();
-            Console.WriteLine("finish");
-
+            var result = await client.GetBasicInventoriesAsync();
+            
             if (result.HasErrors)
             {
                 foreach (var resultError in result.Errors)
@@ -36,6 +40,12 @@ namespace BerryClient
                     Console.WriteLine($"{basicInventoryNode.DynamicItemId} - {basicInventoryNode.StringField}");
                 }
             }
+
+            var neuesItem = await client.CreateBasicInventoryAsync("hallo");
+            var neueItemId = neuesItem.Data.CreateBasicInventory.ConcreteItems.First().DynamicItemId;
+
+            var item = await client.GetBasicInventoryByIdAsync(neueItemId);
+            Console.WriteLine(item.Data.BasicInventory.Nodes.First().StringField);
         }
     }
 }
