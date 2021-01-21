@@ -1,0 +1,980 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+scalar Uuid
+
+type Query {
+  node(id: ID!): Node
+  dynamicInventory(dynamicInventoryId: Uuid!): DynamicInventory
+  dynamicInventories(first: Int after: String last: Int before: String where: DynamicInventoryFilterInput order: [DynamicInventorySortInput!]): DynamicInventoryConnection
+  selectionLists(first: Int after: String last: Int before: String where: SelectionListFilterInput order: [SelectionListSortInput!]): SelectionListConnection
+  basicInventory(first: Int after: String last: Int before: String where: BasicInventoryFilterInput order: [BasicInventorySortInput!]): BasicInventoryConnection
+  basicInventoryChangeFeed(from: DateTime! first: Int after: String last: Int before: String where: BasicInventoryFilterInput order: [BasicInventorySortInput!]): BasicInventoryConnection
+  basicInventoryHistory(first: Int after: String last: Int before: String where: BasicInventoryHistoryHistoryFilterInput order: [BasicInventoryHistoryHistorySortInput!]): BasicInventoryHistoryConnection
+  fullTestInventory(first: Int after: String last: Int before: String where: FullTestInventoryFilterInput order: [FullTestInventorySortInput!]): FullTestInventoryConnection
+  fullTestInventoryChangeFeed(from: DateTime! first: Int after: String last: Int before: String where: FullTestInventoryFilterInput order: [FullTestInventorySortInput!]): FullTestInventoryConnection
+  fullTestInventoryHistory(first: Int after: String last: Int before: String where: FullTestInventoryHistoryHistoryFilterInput order: [FullTestInventoryHistoryHistorySortInput!]): FullTestInventoryHistoryConnection
+}
+
+type Mutation {
+  createDynamicInventory(input: CreateDynamicInventoryInput!): CreateDynamicInventoryPayload!
+  updateDynamicInventory(input: UpdateDynamicInventoryInput!): UpdateDynamicInventoryPayload!
+  deleteDynamicInventory(dynamicInventoryId: Uuid!): String!
+  addPropertyDefinitions(input: AddPropertyDefinitionsInput!): AddPropertyDefinitionsPayload!
+  removePropertyDefinitions(input: RemovePropertyDefinitionsInput!): RemovePropertyDefinitionsPayload!
+  createSelectionList(input: CreateSelectionListInput!): CreateSelectionListPayload!
+  updateSelectionList(input: UpdateSelectionListInput!): UpdateSelectionListPayload!
+  deleteSelectionList(input: DeleteSelectionListInput!): DeleteSelectionListPayload!
+  addSelectionItems(input: AddSelectionItemsInput!): AddSelectionItemsPayload!
+  removeSelectionItems(input: RemoveSelectionItemsInput!): RemoveSelectionItemsPayload!
+  createBasicInventory(input: [CreateBasicInventoryInput!]!): CreateBasicInventoryPayload!
+  updateBasicInventory(input: [UpdateBasicInventoryInput!]!): UpdateBasicInventoryPayload!
+  upsertBasicInventory(input: [UpsertBasicInventoryInput!]!): UpsertBasicInventoryPayload!
+  createFullTestInventory(input: [CreateFullTestInventoryInput!]!): CreateFullTestInventoryPayload!
+  updateFullTestInventory(input: [UpdateFullTestInventoryInput!]!): UpdateFullTestInventoryPayload!
+  upsertFullTestInventory(input: [UpsertFullTestInventoryInput!]!): UpsertFullTestInventoryPayload!
+}
+
+"The node interface is implemented by entities that have a global unique identifier."
+interface Node {
+  id: ID!
+}
+
+type DynamicInventory implements Node {
+  id: ID!
+  dynamicInventoryId: Uuid!
+  displayName: String!
+  fieldName: String!
+  variant: Variant!
+  propertyDefinitions: [PropertyDefinition!]!
+}
+
+input DynamicInventoryFilterInput {
+  and: [DynamicInventoryFilterInput!]
+  or: [DynamicInventoryFilterInput!]
+  dynamicInventoryId: ComparableGuidOperationFilterInput
+  displayName: StringOperationFilterInput
+  fieldName: StringOperationFilterInput
+  variant: VariantOperationFilterInput
+  propertyDefinitions: ListFilterInputTypeOfPropertyDefinitionFilterInput
+}
+
+input DynamicInventorySortInput {
+  dynamicInventoryId: SortEnumType
+  displayName: SortEnumType
+  fieldName: SortEnumType
+  variant: SortEnumType
+}
+
+"A connection to a list of items."
+type DynamicInventoryConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [DynamicInventoryEdge!]
+  "A flattened list of the nodes."
+  nodes: [DynamicInventory]
+  totalCount: Int!
+}
+
+type SelectionList implements Node {
+  id: ID!
+  selectionListId: Uuid!
+  fieldName: String!
+  displayName: String!
+  selectionItems: [SelectionItem!]!
+}
+
+input SelectionListFilterInput {
+  and: [SelectionListFilterInput!]
+  or: [SelectionListFilterInput!]
+  selectionListId: ComparableGuidOperationFilterInput
+  fieldName: StringOperationFilterInput
+  displayName: StringOperationFilterInput
+  selectionItems: ListFilterInputTypeOfSelectionItemFilterInput
+}
+
+input SelectionListSortInput {
+  selectionListId: SortEnumType
+  fieldName: SortEnumType
+  displayName: SortEnumType
+}
+
+"A connection to a list of items."
+type SelectionListConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [SelectionListEdge!]
+  "A flattened list of the nodes."
+  nodes: [SelectionList]
+  totalCount: Int!
+}
+
+type BasicInventory implements IItem & Node {
+  id: ID!
+  dynamicItemId: Uuid!
+  dynamicInventoryId: Uuid!
+  changeDate: DateTime!
+  changeUser: String!
+  stringField: String
+}
+
+type BasicInventoryHistory implements IItem & IHistoryItem & Node {
+  id: ID!
+  dynamicHistoryItemId: Uuid!
+  dynamicItemId: Uuid!
+  dynamicInventoryId: Uuid!
+  changeDate: DateTime!
+  changeUser: String!
+  stringField: String
+}
+
+type FullTestInventory implements IItem & Node {
+  id: ID!
+  dynamicItemId: Uuid!
+  dynamicInventoryId: Uuid!
+  changeDate: DateTime!
+  changeUser: String!
+  stringField: String!
+  stringFieldNull: String
+  stringFieldList: [String!]!
+  stringFieldNullList: [String]
+  boolField: Boolean!
+  boolFieldNull: Boolean
+  boolFieldList: [Boolean!]!
+  boolFieldNullList: [Boolean]
+  dateField: DateTime!
+  dateFieldNull: DateTime
+  dateFieldList: [DateTime!]!
+  dateFieldNullList: [DateTime]
+  numberField: Float!
+  numberFieldNull: Float
+  numberFieldList: [Float!]!
+  numberFieldNullList: [Float]
+  enumField: Regionen!
+  enumFieldNull: Regionen
+  enumFieldList: [Regionen!]!
+  enumFieldNullList: [Regionen]
+  refField: BasicInventory!
+  refFieldNull: BasicInventory
+  refFieldList: [BasicInventory!]!
+  refFieldNullList: [BasicInventory]
+}
+
+type FullTestInventoryHistory implements IItem & IHistoryItem & Node {
+  id: ID!
+  dynamicHistoryItemId: Uuid!
+  dynamicItemId: Uuid!
+  dynamicInventoryId: Uuid!
+  changeDate: DateTime!
+  changeUser: String!
+  stringField: String
+  stringFieldNull: String
+  stringFieldList: [String]
+  stringFieldNullList: [String]
+  boolField: Boolean!
+  boolFieldNull: Boolean
+  boolFieldList: [Boolean!]
+  boolFieldNullList: [Boolean]
+  dateField: DateTime!
+  dateFieldNull: DateTime
+  dateFieldList: [DateTime!]
+  dateFieldNullList: [DateTime]
+  numberField: Float!
+  numberFieldNull: Float
+  numberFieldList: [Float!]
+  numberFieldNullList: [Float]
+  refField: BasicInventoryHistory
+  refFieldNull: BasicInventoryHistory
+  refFieldList: [BasicInventoryHistory]
+  refFieldNullList: [BasicInventoryHistory]
+}
+
+input BasicInventoryFilterInput {
+  and: [BasicInventoryFilterInput!]
+  or: [BasicInventoryFilterInput!]
+  dynamicInventoryId: ComparableGuidOperationFilterInput
+  dynamicItemId: ComparableGuidOperationFilterInput
+  changeDate: ComparableDateTimeOperationFilterInput
+  changeUser: StringOperationFilterInput
+  stringField: StringOperationFilterInput
+}
+
+input BasicInventorySortInput {
+  dynamicInventoryId: SortEnumType
+  dynamicItemId: SortEnumType
+  changeDate: SortEnumType
+  changeUser: SortEnumType
+  stringField: SortEnumType
+}
+
+input BasicInventoryHistoryHistoryFilterInput {
+  and: [BasicInventoryHistoryHistoryFilterInput!]
+  or: [BasicInventoryHistoryHistoryFilterInput!]
+  dynamicHistoryItemId: ComparableGuidOperationFilterInput
+  dynamicInventoryId: ComparableGuidOperationFilterInput
+  dynamicItemId: ComparableGuidOperationFilterInput
+  changeDate: ComparableDateTimeOperationFilterInput
+  changeUser: StringOperationFilterInput
+  stringField: StringOperationFilterInput
+}
+
+input BasicInventoryHistoryHistorySortInput {
+  dynamicHistoryItemId: SortEnumType
+  dynamicInventoryId: SortEnumType
+  dynamicItemId: SortEnumType
+  changeDate: SortEnumType
+  changeUser: SortEnumType
+  stringField: SortEnumType
+}
+
+input FullTestInventoryFilterInput {
+  and: [FullTestInventoryFilterInput!]
+  or: [FullTestInventoryFilterInput!]
+  dynamicInventoryId: ComparableGuidOperationFilterInput
+  dynamicItemId: ComparableGuidOperationFilterInput
+  changeDate: ComparableDateTimeOperationFilterInput
+  changeUser: StringOperationFilterInput
+  stringField: StringOperationFilterInput
+  stringFieldNull: StringOperationFilterInput
+  stringFieldList: ListStringOperationFilterInput
+  stringFieldNullList: ListStringOperationFilterInput
+  boolField: BooleanOperationFilterInput
+  boolFieldNull: BooleanOperationFilterInput
+  boolFieldList: ListBooleanOperationFilterInput
+  boolFieldNullList: ListBooleanOperationFilterInput
+  dateField: ComparableDateTimeOperationFilterInput
+  dateFieldNull: ComparableDateTimeOperationFilterInput
+  dateFieldList: ListComparableDateTimeOperationFilterInput
+  dateFieldNullList: ListComparableDateTimeOperationFilterInput
+  numberField: ComparableDoubleOperationFilterInput
+  numberFieldNull: ComparableDoubleOperationFilterInput
+  numberFieldList: ListComparableDoubleOperationFilterInput
+  numberFieldNullList: ListComparableDoubleOperationFilterInput
+  enumField: RegionenFilterInput
+  enumFieldNull: RegionenFilterInput
+  enumFieldList: ListCustomEnumOperationFilterInputTypeOfRegionenFilterInput
+  enumFieldNullList: ListCustomEnumOperationFilterInputTypeOfRegionenFilterInput
+  refField: BasicInventoryFilterInput
+  refFieldNull: BasicInventoryFilterInput
+  refFieldList: ListConcreteItemFilterInputOfBasicInventoryFilterInput
+  refFieldNullList: ListConcreteItemFilterInputOfBasicInventoryFilterInput
+}
+
+input FullTestInventorySortInput {
+  dynamicInventoryId: SortEnumType
+  dynamicItemId: SortEnumType
+  changeDate: SortEnumType
+  changeUser: SortEnumType
+  stringField: SortEnumType
+  stringFieldNull: SortEnumType
+  boolField: SortEnumType
+  boolFieldNull: SortEnumType
+  dateField: SortEnumType
+  dateFieldNull: SortEnumType
+  numberField: SortEnumType
+  numberFieldNull: SortEnumType
+}
+
+input FullTestInventoryHistoryHistoryFilterInput {
+  and: [FullTestInventoryHistoryHistoryFilterInput!]
+  or: [FullTestInventoryHistoryHistoryFilterInput!]
+  dynamicHistoryItemId: ComparableGuidOperationFilterInput
+  dynamicInventoryId: ComparableGuidOperationFilterInput
+  dynamicItemId: ComparableGuidOperationFilterInput
+  changeDate: ComparableDateTimeOperationFilterInput
+  changeUser: StringOperationFilterInput
+  stringField: StringOperationFilterInput
+  stringFieldNull: StringOperationFilterInput
+  stringFieldList: ListStringOperationFilterInput
+  stringFieldNullList: ListStringOperationFilterInput
+  boolField: BooleanOperationFilterInput
+  boolFieldNull: BooleanOperationFilterInput
+  boolFieldList: ListBooleanOperationFilterInput
+  boolFieldNullList: ListBooleanOperationFilterInput
+  dateField: ComparableDateTimeOperationFilterInput
+  dateFieldNull: ComparableDateTimeOperationFilterInput
+  dateFieldList: ListComparableDateTimeOperationFilterInput
+  dateFieldNullList: ListComparableDateTimeOperationFilterInput
+  numberField: ComparableDoubleOperationFilterInput
+  numberFieldNull: ComparableDoubleOperationFilterInput
+  numberFieldList: ListComparableDoubleOperationFilterInput
+  numberFieldNullList: ListComparableDoubleOperationFilterInput
+  refField: BasicInventoryHistoryHistoryFilterInput
+  refFieldNull: BasicInventoryHistoryHistoryFilterInput
+  refFieldList: ListConcreteHistoryItemFilterInputOfBasicInventoryHistoryFilterInput
+  refFieldNullList: ListConcreteHistoryItemFilterInputOfBasicInventoryHistoryFilterInput
+}
+
+input FullTestInventoryHistoryHistorySortInput {
+  dynamicHistoryItemId: SortEnumType
+  dynamicInventoryId: SortEnumType
+  dynamicItemId: SortEnumType
+  changeDate: SortEnumType
+  changeUser: SortEnumType
+  stringField: SortEnumType
+  stringFieldNull: SortEnumType
+  boolField: SortEnumType
+  boolFieldNull: SortEnumType
+  dateField: SortEnumType
+  dateFieldNull: SortEnumType
+  numberField: SortEnumType
+  numberFieldNull: SortEnumType
+}
+
+"A connection to a list of items."
+type BasicInventoryConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [BasicInventoryEdge!]
+  "A flattened list of the nodes."
+  nodes: [BasicInventory]
+  totalCount: Int!
+}
+
+"A connection to a list of items."
+type BasicInventoryHistoryConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [BasicInventoryHistoryEdge!]
+  "A flattened list of the nodes."
+  nodes: [BasicInventoryHistory]
+  totalCount: Int!
+}
+
+"A connection to a list of items."
+type FullTestInventoryConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [FullTestInventoryEdge!]
+  "A flattened list of the nodes."
+  nodes: [FullTestInventory]
+  totalCount: Int!
+}
+
+"A connection to a list of items."
+type FullTestInventoryHistoryConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [FullTestInventoryHistoryEdge!]
+  "A flattened list of the nodes."
+  nodes: [FullTestInventoryHistory]
+  totalCount: Int!
+}
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime
+
+type CreateDynamicInventoryPayload {
+  dynamicInventory: DynamicInventory
+  errors: [UserError!]
+}
+
+type UpdateDynamicInventoryPayload {
+  dynamicInventory: DynamicInventory
+  errors: [UserError!]
+}
+
+type AddPropertyDefinitionsPayload {
+  dynamicInventory: DynamicInventory
+  errors: [UserError!]
+}
+
+type RemovePropertyDefinitionsPayload {
+  dynamicInventory: DynamicInventory
+  errors: [UserError!]
+}
+
+input CreateDynamicInventoryInput {
+  fieldName: String!
+  displayName: String
+  variant: Variant!
+  propertyDefinitions: [AddPropertyDefinitionInput!]!
+}
+
+input UpdateDynamicInventoryInput {
+  propertyDefinitions: [UpdatePropertyDefinitionInput]
+  dynamicInventoryId: Uuid!
+  displayName: String
+  fieldName: String
+}
+
+type CreateSelectionListPayload {
+  selectionList: SelectionList
+  errors: [UserError!]
+}
+
+type UpdateSelectionListPayload {
+  selectionList: SelectionList
+  errors: [UserError!]
+}
+
+type DeleteSelectionListPayload {
+  errors: [UserError!]
+}
+
+type AddSelectionItemsPayload {
+  selectionList: SelectionList
+  errors: [UserError!]
+}
+
+type RemoveSelectionItemsPayload {
+  selectionList: SelectionList
+  errors: [UserError!]
+}
+
+input CreateSelectionListInput {
+  selectionItems: [AddSelectionItemInput]
+  fieldName: String!
+  displayName: String
+}
+
+input UpdateSelectionListInput {
+  selectionItems: [UpdateSelectionItemInput]
+  selectionListId: Uuid!
+  displayName: String
+  fieldName: String
+}
+
+input DeleteSelectionListInput {
+  selectionListId: Uuid!
+}
+
+input AddSelectionItemsInput {
+  selectionItems: [AddSelectionItemInput]
+  selectionListId: Uuid!
+}
+
+input RemoveSelectionItemsInput {
+  selectionListId: Uuid!
+  selectionItemIds: [Uuid!]!
+}
+
+type CreateBasicInventoryPayload {
+  concreteItems: [BasicInventory!]
+  errors: [UserError!]
+}
+
+type UpdateBasicInventoryPayload {
+  concreteItems: [BasicInventory]
+  errors: [UserError!]
+}
+
+type UpsertBasicInventoryPayload {
+  concreteItems: [BasicInventory]
+  errors: [UserError!]
+}
+
+type CreateFullTestInventoryPayload {
+  concreteItems: [FullTestInventory!]
+  errors: [UserError!]
+}
+
+type UpdateFullTestInventoryPayload {
+  concreteItems: [FullTestInventory]
+  errors: [UserError!]
+}
+
+type UpsertFullTestInventoryPayload {
+  concreteItems: [FullTestInventory]
+  errors: [UserError!]
+}
+
+input CreateBasicInventoryInput {
+  stringField: String
+}
+
+input UpdateBasicInventoryInput {
+  dynamicItemId: Uuid!
+  stringField: String
+}
+
+input UpsertBasicInventoryInput {
+  dynamicItemId: Uuid!
+  stringField: String
+}
+
+input CreateFullTestInventoryInput {
+  stringField: String!
+  stringFieldNull: String
+  stringFieldList: [String!]!
+  stringFieldNullList: [String]
+  boolField: Boolean!
+  boolFieldNull: Boolean
+  boolFieldList: [Boolean!]!
+  boolFieldNullList: [Boolean]
+  dateField: DateTime!
+  dateFieldNull: DateTime
+  dateFieldList: [DateTime!]!
+  dateFieldNullList: [DateTime]
+  numberField: Float!
+  numberFieldNull: Float
+  numberFieldList: [Float!]!
+  numberFieldNullList: [Float]
+  enumField: Regionen!
+  enumFieldNull: Regionen
+  enumFieldList: [Regionen!]!
+  enumFieldNullList: [Regionen]
+  refField: Uuid!
+  refFieldNull: Uuid
+  refFieldList: [Uuid!]!
+  refFieldNullList: [Uuid]
+}
+
+input UpdateFullTestInventoryInput {
+  dynamicItemId: Uuid!
+  stringField: String
+  stringFieldNull: String
+  stringFieldList: [String]
+  stringFieldNullList: [String]
+  boolField: Boolean
+  boolFieldNull: Boolean
+  boolFieldList: [Boolean]
+  boolFieldNullList: [Boolean]
+  dateField: DateTime
+  dateFieldNull: DateTime
+  dateFieldList: [DateTime]
+  dateFieldNullList: [DateTime]
+  numberField: Float
+  numberFieldNull: Float
+  numberFieldList: [Float]
+  numberFieldNullList: [Float]
+  enumField: Regionen
+  enumFieldNull: Regionen
+  enumFieldList: [Regionen]
+  enumFieldNullList: [Regionen]
+  refField: Uuid
+  refFieldNull: Uuid
+  refFieldList: [Uuid]
+  refFieldNullList: [Uuid]
+}
+
+input UpsertFullTestInventoryInput {
+  dynamicItemId: Uuid!
+  stringField: String!
+  stringFieldNull: String
+  stringFieldList: [String!]!
+  stringFieldNullList: [String]
+  boolField: Boolean!
+  boolFieldNull: Boolean
+  boolFieldList: [Boolean!]!
+  boolFieldNullList: [Boolean]
+  dateField: DateTime!
+  dateFieldNull: DateTime
+  dateFieldList: [DateTime!]!
+  dateFieldNullList: [DateTime]
+  numberField: Float!
+  numberFieldNull: Float
+  numberFieldList: [Float!]!
+  numberFieldNullList: [Float]
+  enumField: Regionen!
+  enumFieldNull: Regionen
+  enumFieldList: [Regionen!]!
+  enumFieldNullList: [Regionen]
+  refField: Uuid!
+  refFieldNull: Uuid
+  refFieldList: [Uuid!]!
+  refFieldNullList: [Uuid]
+}
+
+enum ApplyPolicy {
+  BEFORE_RESOLVER
+  AFTER_RESOLVER
+}
+
+input ComparableGuidOperationFilterInput {
+  eq: Uuid
+  neq: Uuid
+  in: [Uuid!]
+  nin: [Uuid!]
+  gt: Uuid
+  ngt: Uuid
+  gte: Uuid
+  ngte: Uuid
+  lt: Uuid
+  nlt: Uuid
+  lte: Uuid
+  nlte: Uuid
+}
+
+input StringOperationFilterInput {
+  and: [StringOperationFilterInput!]
+  or: [StringOperationFilterInput!]
+  eq: String
+  neq: String
+  contains: String
+  ncontains: String
+  in: [String]
+  nin: [String]
+  startsWith: String
+  nstartsWith: String
+  endsWith: String
+  nendsWith: String
+}
+
+input VariantOperationFilterInput {
+  eq: Variant
+  neq: Variant
+  in: [Variant!]
+  nin: [Variant!]
+}
+
+input ListFilterInputTypeOfPropertyDefinitionFilterInput {
+  all: PropertyDefinitionFilterInput
+  none: PropertyDefinitionFilterInput
+  some: PropertyDefinitionFilterInput
+  any: Boolean
+}
+
+enum SortEnumType {
+  ASC
+  DESC
+}
+
+"Information about pagination in a connection."
+type PageInfo {
+  "Indicates whether more edges exist following the set defined by the clients arguments."
+  hasNextPage: Boolean!
+  "Indicates whether more edges exist prior the set defined by the clients arguments."
+  hasPreviousPage: Boolean!
+  "When paginating backwards, the cursor to continue."
+  startCursor: String
+  "When paginating forwards, the cursor to continue."
+  endCursor: String
+}
+
+"An edge in a connection."
+type DynamicInventoryEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: DynamicInventory
+}
+
+input ListFilterInputTypeOfSelectionItemFilterInput {
+  all: SelectionItemFilterInput
+  none: SelectionItemFilterInput
+  some: SelectionItemFilterInput
+  any: Boolean
+}
+
+"An edge in a connection."
+type SelectionListEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: SelectionList
+}
+
+interface IItem {
+  dynamicItemId: Uuid!
+  dynamicInventoryId: Uuid!
+  changeDate: DateTime!
+  changeUser: String!
+}
+
+interface IHistoryItem {
+  dynamicItemId: Uuid!
+  dynamicInventoryId: Uuid!
+  changeDate: DateTime!
+  changeUser: String!
+  dynamicHistoryItemId: Uuid!
+}
+
+enum Regionen {
+  NA
+  BAYERN
+  BADEN
+}
+
+input ComparableDateTimeOperationFilterInput {
+  eq: DateTime
+  neq: DateTime
+  in: [DateTime!]
+  nin: [DateTime!]
+  gt: DateTime
+  ngt: DateTime
+  gte: DateTime
+  ngte: DateTime
+  lt: DateTime
+  nlt: DateTime
+  lte: DateTime
+  nlte: DateTime
+}
+
+input ListStringOperationFilterInput {
+  all: StringOperationFilterInput
+  none: StringOperationFilterInput
+  some: StringOperationFilterInput
+  any: Boolean
+}
+
+input BooleanOperationFilterInput {
+  eq: Boolean
+  neq: Boolean
+}
+
+input ListBooleanOperationFilterInput {
+  all: BooleanOperationFilterInput
+  none: BooleanOperationFilterInput
+  some: BooleanOperationFilterInput
+  any: Boolean
+}
+
+input ListComparableDateTimeOperationFilterInput {
+  all: ComparableDateTimeOperationFilterInput
+  none: ComparableDateTimeOperationFilterInput
+  some: ComparableDateTimeOperationFilterInput
+  any: Boolean
+}
+
+input ComparableDoubleOperationFilterInput {
+  eq: Float
+  neq: Float
+  in: [Float!]
+  nin: [Float!]
+  gt: Float
+  ngt: Float
+  gte: Float
+  ngte: Float
+  lt: Float
+  nlt: Float
+  lte: Float
+  nlte: Float
+}
+
+input ListComparableDoubleOperationFilterInput {
+  all: ComparableDoubleOperationFilterInput
+  none: ComparableDoubleOperationFilterInput
+  some: ComparableDoubleOperationFilterInput
+  any: Boolean
+}
+
+input RegionenFilterInput {
+  eq: Regionen!
+  neq: Regionen
+  in: [Regionen!]
+  nin: [Regionen!]
+}
+
+input ListCustomEnumOperationFilterInputTypeOfRegionenFilterInput {
+  all: RegionenFilterInput
+  none: RegionenFilterInput
+  some: RegionenFilterInput
+  any: Boolean
+}
+
+input ListConcreteItemFilterInputOfBasicInventoryFilterInput {
+  all: BasicInventoryFilterInput
+  none: BasicInventoryFilterInput
+  some: BasicInventoryFilterInput
+  any: Boolean
+}
+
+input ListConcreteHistoryItemFilterInputOfBasicInventoryHistoryFilterInput {
+  all: BasicInventoryHistoryHistoryFilterInput
+  none: BasicInventoryHistoryHistoryFilterInput
+  some: BasicInventoryHistoryHistoryFilterInput
+  any: Boolean
+}
+
+"An edge in a connection."
+type BasicInventoryEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: BasicInventory
+}
+
+"An edge in a connection."
+type BasicInventoryHistoryEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: BasicInventoryHistory
+}
+
+"An edge in a connection."
+type FullTestInventoryEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: FullTestInventory
+}
+
+"An edge in a connection."
+type FullTestInventoryHistoryEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: FullTestInventoryHistory
+}
+
+input UpdatePropertyDefinitionInput {
+  key: String!
+  fieldName: String
+  displayName: String
+  valueType: PropertyValueType
+  isList: Boolean
+  optional: Boolean
+  historyEnabled: Boolean
+  selectionListId: Uuid
+  referencedInventoryId: Uuid
+}
+
+input AddSelectionItemInput {
+  fieldName: String!
+  displayName: String
+  description: String
+  color: ColorInput
+}
+
+input UpdateSelectionItemInput {
+  selectionItemId: Uuid!
+  fieldName: String
+  displayName: String
+  description: String
+  color: ColorInput
+}
+
+input PropertyDefinitionFilterInput {
+  and: [PropertyDefinitionFilterInput!]
+  or: [PropertyDefinitionFilterInput!]
+  key: StringOperationFilterInput
+  displayName: StringOperationFilterInput
+  fieldName: StringOperationFilterInput
+  valueType: PropertyValueTypeOperationFilterInput
+  isList: BooleanOperationFilterInput
+  optional: BooleanOperationFilterInput
+  historyEnabled: BooleanOperationFilterInput
+  selectionListId: ComparableNullableOfGuidOperationFilterInput
+  referencedInventoryId: ComparableNullableOfGuidOperationFilterInput
+}
+
+input SelectionItemFilterInput {
+  and: [SelectionItemFilterInput!]
+  or: [SelectionItemFilterInput!]
+  selectionItemId: ComparableGuidOperationFilterInput
+  fieldName: StringOperationFilterInput
+  displayName: StringOperationFilterInput
+  description: StringOperationFilterInput
+  color: ColorFilterInput
+}
+
+input PropertyValueTypeOperationFilterInput {
+  eq: PropertyValueType
+  neq: PropertyValueType
+  in: [PropertyValueType!]
+  nin: [PropertyValueType!]
+}
+
+input ComparableNullableOfGuidOperationFilterInput {
+  eq: Uuid
+  neq: Uuid
+  in: [Uuid]
+  nin: [Uuid]
+  gt: Uuid
+  ngt: Uuid
+  gte: Uuid
+  ngte: Uuid
+  lt: Uuid
+  nlt: Uuid
+  lte: Uuid
+  nlte: Uuid
+}
+
+input ColorFilterInput {
+  and: [ColorFilterInput!]
+  or: [ColorFilterInput!]
+  name: StringOperationFilterInput
+  hexCode: StringOperationFilterInput
+}
+
+input AddPropertyDefinitionsInput {
+  dynamicInventoryId: Uuid!
+  propertyDefinitions: [AddPropertyDefinitionInput!]!
+}
+
+input RemovePropertyDefinitionsInput {
+  dynamicInventoryId: Uuid!
+  propertyKeys: [String!]!
+}
+
+enum Variant {
+  BASIC
+  TIME_SERIES
+  TIME_SERIES_GROUP
+}
+
+type PropertyDefinition {
+  key: String!
+  displayName: String!
+  fieldName: String!
+  valueType: PropertyValueType!
+  isList: Boolean!
+  optional: Boolean!
+  historyEnabled: Boolean!
+  selectionListId: Uuid
+  referencedInventoryId: Uuid
+}
+
+type SelectionItem {
+  selectionItemId: Uuid!
+  fieldName: String!
+  displayName: String!
+  description: String
+  color: Color
+}
+
+type UserError {
+  message: String!
+  code: String!
+}
+
+input AddPropertyDefinitionInput {
+  fieldName: String!
+  displayName: String
+  valueType: PropertyValueType!
+  isList: Boolean
+  optional: Boolean
+  historyEnabled: Boolean
+  selectionListId: Uuid
+  referencedInventoryId: Uuid
+}
+
+enum PropertyValueType {
+  DATE_TIME
+  NUMERIC
+  STRING
+  BOOLEAN
+  DYNAMIC_INVENTORY
+  SELECTION_LIST
+}
+
+input ColorInput {
+  name: String!
+  hexCode: String!
+}
+
+type Color {
+  name: String!
+  hexCode: String!
+}
+
+"The `@defer` directive may be provided for fragment spreads and inline fragments to inform the executor to delay the execution of the current fragment to indicate deprioritization of the current fragment. A query with `@defer` directive will cause the request to potentially return multiple responses, where non-deferred data is delivered in the initial response and data deferred is delivered in a subsequent response. `@include` and `@skip` take precedence over `@defer`."
+directive @defer("If this argument label has a value other than null, it will be passed on to the result of this defer directive. This label is intended to give client applications a way to identify to which fragment a deferred result belongs to." label: String "Deferred when true." if: Boolean) on FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+"The `@stream` directive may be provided for a field of `List` type so that the backend can leverage technology such as asynchronous iterators to provide a partial list in the initial response, and additional list items in subsequent responses. `@include` and `@skip` take precedence over `@stream`."
+directive @stream("If this argument label has a value other than null, it will be passed on to the result of this stream directive. This label is intended to give client applications a way to identify to which fragment a streamed result belongs to." label: String "The initial elements that shall be send down to the consumer." initialCount: Int! "Streamed when true." if: Boolean!) on FIELD
+
+directive @authorize("The name of the authorization policy that determines access to the annotated resource." policy: String "Roles that are allowed to access the annotated resource." roles: [String!] "Defines when when the resolver shall be executed.By default the resolver is executed after the policy has determined that the current user is allowed to access the field." apply: ApplyPolicy! = BEFORE_RESOLVER) repeatable on SCHEMA | OBJECT | FIELD_DEFINITION
+
+"The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
+directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR

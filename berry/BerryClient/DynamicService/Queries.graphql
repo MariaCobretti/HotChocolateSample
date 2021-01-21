@@ -1,0 +1,8 @@
+query BasicInventory {
+  basicInventory {
+    nodes {
+      dynamicItemId
+      stringField
+    }
+  }
+}

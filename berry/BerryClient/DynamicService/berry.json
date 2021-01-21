@@ -1,0 +1,1 @@
+{"Schemas":[{"Name":"DynamicService","Type":"http","File":"DynamicService.graphql","Url":"https://localhost:5001/graphql/"}],"ClientName":"DynamicServiceClient"}
