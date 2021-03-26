@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using HotChocolate.Types;
 
 namespace HotChocolateSample
@@ -11,34 +8,14 @@ namespace HotChocolateSample
         protected override void Configure(IObjectTypeDescriptor descriptor)
         {
             descriptor.Name("Query");
-            var haus = typeof(ConcreteItemType<>).MakeGenericType(typeof(Haus));
-            descriptor.Field("haus")
-                .Type(haus)
-                .Resolve(x => new Haus() { ItemId = "parentId" } );
 
+            descriptor.Field("buildings")
+                .Type<ListType<ConcreteItemType<Building>>>()
+                .Resolve(async x => DataServiceMock.Buildings.Select(x => x.Value));
 
-
-            //var haus = typeof(ConcreteItemType<>).MakeGenericType(typeof(Haus));
-            //var wohnung = typeof(ConcreteItemType<>).MakeGenericType(typeof(Wohnung));
-
-            //var filterType = typeof(ConcreteItemFilterInput<>).MakeGenericType(typeof(Haus));
-            //var wohnungfilterType = typeof(ConcreteItemFilterInput<>).MakeGenericType(typeof(Wohnung));
-
-            //descriptor.Field("haus")
-            //    //.Type(haus)
-            //    .UsePaging(haus)
-            //    //.Type<ConcreteItemType>()
-            //    .Resolve(x => new List<Haus>() { new Haus() { ItemId = "parentId" } })
-            //    .UseFiltering(filterType);
-            //    //.UseFiltering<ConcreteItemFilterInput>();
-
-            //descriptor.Field("wohnung")
-            //    //.Type(wohnung)
-            //    .UsePaging(wohnung)
-            //    //.Type<ConcreteItemType>()
-            //    .Resolve(x => new List<Wohnung>() { new Wohnung() { ItemId = "parentId" } })
-            //    .UseFiltering(wohnungfilterType);
-            //    //.UseFiltering<ConcreteItemFilterInput>();
+            descriptor.Field("flats")
+                .Type<ListType<ConcreteItemType<Flat>>>()
+                .Resolve(async x => DataServiceMock.Flats.Select(x => x.Value));
         }
     }
 }
