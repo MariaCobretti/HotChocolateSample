@@ -1,0 +1,11 @@
+{
+  "schema": "schema.graphql",
+  "documents": "**/*.graphql",
+  "extensions": {
+    "strawberryShake": {
+      "name": "DynoClient",
+      "url": "https://s2o-fk-dev-app-graphql-tsservice.azurewebsites.net/graphql/",
+      "dependencyInjection": true
+    }
+  }
+}

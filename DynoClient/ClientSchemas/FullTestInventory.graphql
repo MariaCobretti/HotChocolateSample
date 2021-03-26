@@ -1,0 +1,40 @@
+query FullTestInventories {
+  fullTestInventory {
+    totalCount
+    nodes {
+      ...FullTestInventory
+    }
+  }
+}
+
+fragment FullTestInventory on FullTestInventory {
+  dynamicItemId
+  boolField
+  boolFieldList
+  boolFieldNull
+  boolFieldNullList
+  dateField
+  dateFieldList
+  dateFieldNull
+  dateFieldNullList
+  enumField
+  enumFieldList
+  enumFieldNull
+  enumFieldNullList
+  numberField
+  numberFieldList
+  numberFieldNull
+  numberFieldNullList
+  refField {
+    ...BasicInventory
+  }
+  refFieldList {
+    ...BasicInventory
+  }
+  refFieldNull {
+    ...BasicInventory
+  }
+  refFieldNullList {
+    ...BasicInventory
+  }
+}

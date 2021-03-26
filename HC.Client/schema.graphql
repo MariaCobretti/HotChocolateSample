@@ -1,0 +1,22 @@
+﻿schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Query {
+  complexField: ComplexOutput
+}
+
+type Mutation {
+  CreateWithComplexArg(input: ComplexInput): ComplexOutput
+}
+
+type ComplexOutput {
+  stringField: String
+  numberField: Float!
+}
+
+input ComplexInput {
+  stringField: String
+  numberField: Float!
+}

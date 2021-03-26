@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>HC.Server._11_1</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HotChocolate.AspNetCore" Version="11.1.0-preview.57-Seven2one" />
+    <PackageReference Include="HotChocolate.Data" Version="11.1.0-preview.57-Seven2one" />
+  </ItemGroup>
+
+</Project>

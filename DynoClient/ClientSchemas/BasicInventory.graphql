@@ -1,0 +1,43 @@
+query BasicInventories{
+  basicInventory {
+    nodes {
+      ...BasicInventory
+    }
+  }
+}
+
+mutation CreateBasicInventory ($numberField: Float $stringField: String){
+  createBasicInventory(input: {
+    numberField: $numberField
+    stringField: $stringField
+  }){
+    concreteItems{
+      ...BasicInventory
+    }
+  }
+}
+
+mutation CreateBasicInventory2 ($input: [CreateBasicInventoryInput!]!){
+  createBasicInventory(input: $input){
+    concreteItems{
+      ...BasicInventory
+    }
+  }
+}
+
+# subscription OnBasicInventoryMutated ($topicId: Uuid! $stringFieldRoutingValue: String!) {
+#   onBasicInventoryMutated(topicId: $topicId routingValues: { stringField: $stringFieldRoutingValue}) {
+#     ...BasicInventory
+#   }
+# }
+
+fragment BasicInventory on BasicInventory {
+  dynamicItemId
+  numberField
+  stringField
+}
+
+# fragment UserError on UserError{
+#   code
+#   message
+# }

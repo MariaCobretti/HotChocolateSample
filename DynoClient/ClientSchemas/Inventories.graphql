@@ -1,0 +1,14 @@
+query Inventories{
+    dynamicInventories{
+        nodes{
+            ...Inventory
+        }
+    }
+}
+
+fragment Inventory on DynamicInventory{
+    dynamicInventoryId
+    fieldName
+    displayName
+    variant
+}

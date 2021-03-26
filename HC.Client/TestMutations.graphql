@@ -1,0 +1,6 @@
+﻿mutation CreateTest($input: ComplexInput!){
+  CreateWithComplexArg(input: $input){
+    stringField
+    numberField
+  }
+}

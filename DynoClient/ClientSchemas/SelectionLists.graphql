@@ -1,0 +1,15 @@
+
+query SelectionLists {
+  selectionLists {
+    nodes {
+      fieldName
+      selectionListId
+      displayName
+      selectionItems {
+        fieldName
+        selectionItemId
+        description
+      }
+    }
+  }
+}
